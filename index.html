@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVEspía 2000 · Halloween Edition</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦇</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07090d;--panel:#141b24;--line:#263241;--text:#e6edf3;--muted:#8b9bb0;--accent:#ffb020;--danger:#ff4d4d;--ok:#3ddc84;--orange:#ff7a1a;
+  --mono:'Space Mono',ui-monospace,monospace;--sans:'Inter',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#000;overflow:hidden;color:var(--text);font-family:var(--sans)}
+#stage{position:absolute;left:50%;top:50%;width:1600px;height:900px;transform-origin:center;background:var(--bg);overflow:hidden}
+.slide{position:absolute;inset:0;padding:70px 90px;display:none}
+.slide.on{display:block}
+.slide::after{content:"AVEspía 2000 · SideQuest · Halloween Edition";position:absolute;left:90px;bottom:30px;font-family:var(--mono);font-size:14px;color:#4a5868}
+.slide.nofoot::after{display:none}
+.tag{font-family:var(--mono);font-size:20px;color:var(--accent);letter-spacing:.2em;text-transform:uppercase;margin-bottom:18px}
+h1{font-size:76px;font-weight:900;letter-spacing:-.02em;line-height:1.08}
+h2{font-size:56px;font-weight:800;letter-spacing:-.02em;line-height:1.12}
+.y{color:var(--accent)}.r{color:var(--danger)}.g{color:var(--ok)}.o{color:var(--orange)}
+.frag{opacity:0;transform:translateY(16px);transition:opacity .45s,transform .45s}
+.frag.vis{opacity:1;transform:none}
+.auto{opacity:0;transform:translateY(30px) scale(.96);transition:opacity .6s,transform .6s cubic-bezier(.2,1.4,.4,1)}
+.auto.vis{opacity:1;transform:none}
+.center{display:flex;flex-direction:column;justify-content:center;height:100%}
+.mid{text-align:center;align-items:center}
+.cards{display:grid;gap:22px;margin-top:40px}
+.ev .card{width:calc((100% - 44px)/3)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:26px 26px}
+.card .e{font-size:44px;margin-bottom:10px}
+.card h3{font-size:26px;margin-bottom:8px;line-height:1.2}
+.card p{font-size:20px;color:var(--muted);line-height:1.4}
+.card p b{color:var(--accent);font-weight:600}
+.sq{height:64px}
+.stamp{display:inline-block;font-family:var(--mono);font-weight:700;color:var(--danger);border:4px solid var(--danger);padding:8px 18px;font-size:30px;letter-spacing:.15em;transform:rotate(-8deg)}
+.vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.6));z-index:5}
+.moon{position:absolute;right:120px;top:90px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff6d8,#e9d08a 60%,#b89a4a);box-shadow:0 0 80px rgba(255,220,140,.35)}
+
+/* s1 */
+.prev{position:absolute;left:90px;top:70px;font-family:var(--mono);font-size:22px;color:var(--muted);letter-spacing:.3em}
+.prevbox{display:flex;gap:70px;align-items:center;margin-top:170px}
+.prevbox img.ph{width:640px;border-radius:16px;filter:grayscale(.2) contrast(1.05);border:1px solid var(--line)}
+.win{position:absolute;right:120px;bottom:120px}
+
+/* s3 baby bats */
+#babies{position:absolute;inset:0;z-index:2;pointer-events:none}
+#carrier{position:absolute;left:0;top:0;width:480px;z-index:4}
+#carrier .cbat{width:480px;animation:bob 1.2s ease-in-out infinite}
+#carrier .cbat svg{width:100%;display:block}
+#carrier .strings{position:relative;height:70px;margin-top:-30px}
+#carrier .strings i{position:absolute;top:0;width:3px;height:100%;background:rgba(230,237,243,.75)}
+#carrier .strings i:first-child{left:190px;transform:rotate(8deg)}#carrier .strings i:last-child{left:290px;transform:rotate(-8deg)}
+#carrier .cphoto{width:400px;margin:0 auto;background:#fff;padding:14px 14px 78px;position:relative;box-shadow:0 20px 50px rgba(0,0,0,.7);transform-origin:50% 0;animation:swing2 2.4s ease-in-out infinite}
+#carrier .cphoto img,#carrier .cphoto svg{display:block;width:100%;height:330px;object-fit:cover}
+#carrier .cphoto span{position:absolute;left:8px;right:8px;bottom:14px;text-align:center;font-weight:900;font-size:32px;color:#111;line-height:1.1}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes swing2{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.baby{position:absolute;width:300px;background:#fff;padding:12px 12px 62px;box-shadow:0 14px 40px rgba(0,0,0,.6);animation:pop .35s cubic-bezier(.2,1.6,.4,1)}
+.baby img,.baby svg{display:block;width:100%;height:270px;object-fit:cover;background:#f2e8da}
+.baby span{position:absolute;left:6px;right:6px;bottom:10px;text-align:center;font-family:'Inter',system-ui,sans-serif;font-weight:900;color:#111;font-size:27px;line-height:1.1}
+@keyframes pop{from{transform:scale(0) rotate(0)}}
+.nope{position:absolute;left:50%;top:50%;z-index:3;transform:translate(-50%,-50%) rotate(-6deg) scale(.6);opacity:0;background:var(--danger);color:#fff;font-weight:900;font-size:82px;padding:20px 50px;border:6px solid #fff;box-shadow:0 20px 60px rgba(0,0,0,.7);white-space:nowrap;transition:all .35s cubic-bezier(.2,1.6,.4,1)}
+.nope.vis{opacity:1;transform:translate(-50%,-50%) rotate(-6deg) scale(1)}
+
+/* s5 striptease */
+.tape{position:absolute;left:-100px;right:-100px;height:90px;background:repeating-linear-gradient(-45deg,#ffb020 0 40px,#111 40px 80px);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:34px;letter-spacing:.2em;color:#000}
+.tape span{background:#ffb020;padding:4px 20px}
+.tape.t1{top:70px;transform:rotate(-3deg)}.tape.t2{bottom:70px;transform:rotate(2deg)}
+.deploy{font-family:var(--mono);font-size:30px;color:var(--ok);margin-top:30px}
+.dbar{width:900px;height:26px;border:2px solid var(--line);border-radius:99px;overflow:hidden;margin:24px auto 0;background:#000}
+.dbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ok),var(--accent),var(--danger))}
+.s5on .dbar i{animation:dep 9s linear forwards}
+@keyframes dep{to{width:100%}}
+.blink{animation:bl 1s infinite}@keyframes bl{50%{opacity:.35}}
+
+/* s6 title */
+.big-arm{font-size:110px;font-weight:900;letter-spacing:-.03em;line-height:1}
+@font-face{font-family:'Creepster';src:url('fonts/creepster.woff2') format('woff2');font-display:block}
+.t-main{font-size:120px;font-weight:900;letter-spacing:-.03em;line-height:1}
+.t-hw{font-family:'Creepster',var(--sans);font-size:150px;color:var(--orange);line-height:1.05;margin:6px 0 18px;letter-spacing:.03em;text-shadow:0 0 30px rgba(255,122,26,.55),0 6px 0 #6b1d00;animation:hwf 3.5s ease-in-out infinite}
+@keyframes hwf{0%,100%{text-shadow:0 0 30px rgba(255,122,26,.55),0 6px 0 #6b1d00}50%{text-shadow:0 0 55px rgba(255,90,0,.9),0 6px 0 #6b1d00}}
+.web{position:absolute;top:0;width:360px;height:360px;z-index:1}.web.wl{left:0}.web.wr{right:0}
+.hang{position:absolute;left:1020px;top:0;width:230px;transform-origin:50% 0;animation:sway 3.2s ease-in-out infinite;z-index:3}
+.hang .thread{width:2px;height:110px;background:rgba(230,237,243,.6);margin:0 auto}
+.hang svg{display:block;width:230px;transform:rotate(180deg);margin-top:-8px;filter:drop-shadow(0 0 10px rgba(255,176,32,.4))}
+@keyframes sway{0%,100%{transform:rotate(6deg)}50%{transform:rotate(-6deg)}}
+.pk{position:absolute;bottom:20px;z-index:6}.pk.pl{left:40px;width:240px}.pk.pr{right:50px;width:210px}.pk.pm{left:270px;width:130px;bottom:24px}
+.pk .glow{filter:drop-shadow(0 0 8px #ffb020);animation:cand 1.6s infinite}
+@keyframes cand{0%,100%{opacity:1}40%{opacity:.75}60%{opacity:.95}}
+.title-x{font-size:64px;font-weight:900;margin-top:30px}
+.sub-x{font-family:var(--mono);font-size:24px;color:var(--muted);margin-top:16px}
+
+/* s9 testigo */
+.tw{position:relative;width:1100px;height:600px;margin:26px auto 0;background:#000;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.tw video{width:100%;height:100%;object-fit:contain;background:#000}
+.tw .ph2{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-family:var(--mono);color:var(--muted);font-size:22px}
+.tw .ph2 .sil{font-size:180px;filter:blur(10px) grayscale(1)}
+.tw .lab{position:absolute;left:18px;top:16px;background:var(--danger);color:#fff;font-family:var(--mono);font-weight:700;padding:6px 12px;font-size:18px;z-index:2}
+.tw .lab2{position:absolute;right:18px;top:16px;color:#fff;font-family:var(--mono);font-size:16px;z-index:2;text-shadow:0 0 6px #000}
+.tw::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0 1px,transparent 1px 3px)}
+
+/* s10 doc */
+.doc{width:1000px;margin:10px auto 0;background:#efe9da;color:#222;padding:46px 60px;font-family:'Courier New',monospace;font-size:27px;line-height:1.85;box-shadow:0 20px 60px rgba(0,0,0,.6);transform:rotate(-1deg);position:relative}
+.doc h4{font-size:24px;letter-spacing:.15em;margin-bottom:14px;color:#a11}
+.doc .k{background:#111;color:#111;border-radius:2px;padding:0 4px;user-select:none}
+.doc .w{background:#fff36a;font-weight:700;padding:0 4px}
+.doc .st{position:absolute;right:40px;top:30px}
+
+/* s12 */
+.qr{position:absolute;right:90px;top:70px;text-align:center;font-family:var(--mono);font-size:15px;color:var(--muted)}
+.qr img{width:210px;display:block;margin-bottom:8px;border-radius:6px}
+#gracias{display:inline-block;font-size:150px;font-weight:900;letter-spacing:-.03em;color:var(--accent);transition:none}
+
+/* ===== bats ===== */
+#swarm{position:absolute;inset:0;z-index:50;pointer-events:none;overflow:hidden}
+.sb{position:absolute;left:0;top:0;will-change:transform}
+.sb svg{display:block;width:100%;height:auto;filter:drop-shadow(0 0 10px rgba(255,122,26,.85)) drop-shadow(0 0 22px rgba(255,90,0,.45))}
+.wing{transform-origin:50% 40%;animation:fl .16s ease-in-out infinite alternate}
+@keyframes fl{to{transform:scaleY(.35)}}
+#grumpy{position:absolute;z-index:60;width:240px;left:0;top:0;transition:transform 1.1s cubic-bezier(.2,.8,.3,1);display:none}
+#grumpy.flee{transition:transform .7s cubic-bezier(.6,0,.9,.4)}
+#grumpy .body{transition:transform .4s}
+#bubble{position:absolute;z-index:61;background:#fff;color:#111;font-weight:800;font-size:28px;line-height:1.25;padding:16px 22px;border-radius:22px;max-width:430px;display:none;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+#bubble::after{content:"";position:absolute;right:46px;top:-22px;border:12px solid transparent;border-bottom:16px solid #fff}
+#bubble.pop{animation:bp .25s cubic-bezier(.2,1.6,.4,1)}
+@keyframes bp{from{transform:scale(.4);opacity:0}}
+.censor{background:#111;color:#ff4d4d;padding:0 6px;border-radius:4px;font-family:var(--mono)}
+
+#start{position:fixed;inset:0;z-index:999;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;font-family:var(--mono);color:var(--muted);padding:20px}
+#start .sbtn{font-family:var(--mono);font-size:24px;font-weight:700;padding:16px 40px;border-radius:10px;border:0;background:var(--accent);color:#000;cursor:pointer}
+#start .tbtn{font-family:var(--mono);font-size:16px;padding:10px 20px;border-radius:8px;border:1px solid var(--muted);background:#111;color:#e6edf3;cursor:pointer}
+#start .yt{display:flex;flex-direction:column;gap:6px;width:min(640px,90vw);margin-top:14px}
+#start .yt input{font-family:var(--mono);font-size:16px;padding:12px;border-radius:8px;border:1px solid #444;background:#0b0f14;color:#e6edf3}
+#start .yt small{font-size:13px}
+#ytBack{position:absolute;left:24px;bottom:22px;z-index:6;font-family:var(--mono);font-size:13px;color:#8b9bb0;background:rgba(0,0,0,.6);border:1px solid #333;padding:5px 10px;border-radius:6px;text-decoration:none}
+#ytBack:hover{color:#fff}
+#start b{font-size:28px;color:var(--accent)}
+#hud{position:fixed;right:10px;bottom:8px;z-index:998;font-family:var(--mono);font-size:12px;color:#334;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="start">
+  <button class="sbtn" id="bGo">▶ INICIAR PRESENTACIÓN</button>
+  <span>(pantalla completa · flechas o espacio para avanzar · B o . = el murciélago se va)</span>
+  <button class="tbtn" id="bTest">🔊 PRUEBA DE SONIDO</button>
+  <div class="yt"><label for="ytIn">Link de YouTube del testimonio (opcional)</label>
+    <input id="ytIn" placeholder="https://youtu.be/..." autocomplete="off">
+    <small id="ytInfo">Sin link → la slide del testimonio no aparece.</small></div>
+</div>
+<div id="stage">
+
+  <!-- 1 · Anteriormente -->
+  <section class="slide" data-n="1">
+    <div class="prev">ANTERIORMENTE EN SIDEQUEST...</div>
+    <div class="prevbox">
+      <img class="ph" src="img/paloma.jpg" alt="">
+      <div>
+        <img src="img/sidequest.png" class="sq" alt="" style="height:90px;margin-bottom:24px;border-radius:6px">
+        <div class="tag">Conspiracy Edition</div>
+        <h2>Birds Aren't Real:<br><span class="y">AVEspía 2000</span></h2>
+        <p style="font-size:26px;color:var(--muted);margin-top:18px">Los pájaros no existen. Son drones.<br>Y se cargan en los cables de la calle.</p>
+      </div>
+    </div>
+    <div class="win"><span class="stamp">GANADOR</span></div>
+  </section>
+
+  <!-- 2 · Silencio nocturno -->
+  <section class="slide" data-n="2">
+    <div class="moon"></div>
+    <div class="center">
+      <div class="tag">Investigación · parte 2</div>
+      <h1>¿Por qué de noche<br>no canta <span class="y">ni un solo pájaro</span>?</h1>
+      <h1 class="frag" style="margin-top:50px;font-size:96px">Cambio de <span class="r">turno</span>.</h1>
+    </div>
+  </section>
+
+  <!-- 3 · Murciélago bebé -->
+  <section class="slide nofoot" data-n="3">
+    <div class="center mid" style="position:relative;z-index:1">
+      <div class="tag">Pregunta para el público</div>
+      <h1>¿Alguien vio alguna vez<br>un <span class="y">murciélago bebé</span>?</h1>
+      <p style="font-size:26px;color:var(--muted);margin-top:24px">Levanten la mano.</p>
+    </div>
+    <div id="babies"></div>
+  </section>
+
+  <!-- 4 · Guerra -->
+  <section class="slide" data-n="4">
+    <div class="center">
+      <h1 class="auto" data-at="0" style="font-size:96px">No existen. <span class="y">Son drones.</span></h1>
+      <h1 class="auto" data-at="0" style="font-size:84px;margin-top:34px">Esto ya no solo es <span class="o">terrorífico</span>.</h1>
+      <h1 class="auto r" data-at="0" style="font-size:150px;margin-top:34px">Es una guerra.</h1>
+    </div>
+  </section>
+
+  <!-- 5 · Arma -->
+  <section class="slide nofoot" data-n="5">
+    <div class="tape t1"></div>
+    <div class="center mid">
+      <div class="tag">Con permiso del organizador</div>
+      <h1 style="font-size:96px">Desplegando el arma</h1>
+      <div class="dbar"><i></i></div>
+    </div>
+    <div class="tape t2"></div>
+  </section>
+
+  <!-- 6 · Nosotros somos el arma -->
+  <section class="slide" data-n="6">
+    <div class="center mid">
+      <div class="big-arm" style="font-size:150px">¡Nosotros somos<br><span class="r">el arma</span>!</div>
+    </div>
+  </section>
+
+  <!-- 6b · Presentación oficial -->
+  <section class="slide nofoot" data-n="6t">
+    <svg class="web wl" viewBox="0 0 360 360"><g  fill="none" stroke="rgba(230,237,243,.55)" stroke-width="1.6"><line x1="0" y1="0" x2="360" y2="0"/><line x1="0" y1="0" x2="348" y2="93"/><line x1="0" y1="0" x2="305" y2="191"/><line x1="0" y1="0" x2="231" y2="276"/><line x1="0" y1="0" x2="135" y2="334"/><line x1="0" y1="0" x2="0" y2="360"/><path d="M50 0 Q40 5 48 13 Q37 16 42 26 Q31 27 32 38 Q21 35 19 46 Q8 40 0 50 "/><path d="M95 0 Q77 10 92 25 Q71 31 81 50 Q58 50 61 73 Q40 66 36 88 Q15 75 0 95 "/><path d="M145 0 Q117 15 140 38 Q108 47 123 77 Q89 77 93 111 Q60 101 54 134 Q22 115 0 145 "/><path d="M200 0 Q161 21 193 52 Q149 65 170 106 Q122 106 129 153 Q83 139 75 185 Q31 158 0 200 "/><path d="M260 0 Q210 28 251 67 Q193 84 220 138 Q159 138 167 199 Q108 180 97 241 Q40 205 0 260 "/><path d="M320 0 Q258 34 309 83 Q238 103 271 170 Q196 170 206 245 Q133 222 120 297 Q49 253 0 320 "/></g></svg><svg class="web wr" viewBox="0 0 360 360"><g transform="scale(-1,1) translate(-360,0)" fill="none" stroke="rgba(230,237,243,.55)" stroke-width="1.6"><line x1="0" y1="0" x2="360" y2="0"/><line x1="0" y1="0" x2="348" y2="93"/><line x1="0" y1="0" x2="305" y2="191"/><line x1="0" y1="0" x2="231" y2="276"/><line x1="0" y1="0" x2="135" y2="334"/><line x1="0" y1="0" x2="0" y2="360"/><path d="M50 0 Q40 5 48 13 Q37 16 42 26 Q31 27 32 38 Q21 35 19 46 Q8 40 0 50 "/><path d="M95 0 Q77 10 92 25 Q71 31 81 50 Q58 50 61 73 Q40 66 36 88 Q15 75 0 95 "/><path d="M145 0 Q117 15 140 38 Q108 47 123 77 Q89 77 93 111 Q60 101 54 134 Q22 115 0 145 "/><path d="M200 0 Q161 21 193 52 Q149 65 170 106 Q122 106 129 153 Q83 139 75 185 Q31 158 0 200 "/><path d="M260 0 Q210 28 251 67 Q193 84 220 138 Q159 138 167 199 Q108 180 97 241 Q40 205 0 260 "/><path d="M320 0 Q258 34 309 83 Q238 103 271 170 Q196 170 206 245 Q133 222 120 297 Q49 253 0 320 "/></g></svg>
+    <div class="hang"><div class="thread"></div><svg viewBox="0 0 740 440"><path d="M30 80 C110 105 170 108 205 102 Q240 180 318 222 L340 150 Q370 185 400 150 L422 222 Q500 180 535 102 C570 108 630 105 710 80 Q660 170 672 265 Q610 250 568 322 Q520 300 492 360 Q420 335 370 410 Q320 335 248 360 Q220 300 172 322 Q130 250 68 265 Q80 170 30 80 Z" fill="#111" stroke="#ffb020" stroke-width="8"/><circle cx="356" cy="208" r="12" fill="#ff4d4d"/><circle cx="384" cy="208" r="12" fill="#ff4d4d"/></svg></div>
+    <div class="center mid" style="position:relative;z-index:2">
+      <div class="t-main">AVE<span class="y">spía</span> 2000</div>
+      <div class="t-hw">Halloween Edition</div>
+      <div class="sub-x">La secuela · segunda y última parte</div>
+      <div class="sub-x" style="margin-top:22px">Presenta: <span id="presenter">Elián Alejandro Gonzalo</span></div>
+    </div>
+    <svg class="pk pl" viewBox="0 0 240 200"><path d="M118 40 Q116 18 132 8" stroke="#3f6b2a" stroke-width="10" fill="none" stroke-linecap="round"/>
+<ellipse cx="70" cy="118" rx="58" ry="74" fill="#e8650f"/><ellipse cx="170" cy="118" rx="58" ry="74" fill="#e8650f"/><ellipse cx="120" cy="118" rx="62" ry="80" fill="#ff7a1a"/>
+<path d="M120 40 Q100 118 120 196 M120 40 Q140 118 120 196" stroke="#c4520b" stroke-width="3" fill="none"/>
+<g class="glow" fill="#ffd34d"><path d="M70 92 L96 92 L83 66 Z"/><path d="M144 92 L170 92 L157 66 Z"/><path d="M112 112 L128 112 L120 98 Z"/>
+<path d="M58 132 Q120 186 182 132 L168 140 L160 128 L148 146 L136 132 L120 152 L104 132 L92 146 L80 128 L72 140 Z"/></g></svg><svg class="pk pr" viewBox="0 0 240 200"><path d="M118 40 Q116 18 132 8" stroke="#3f6b2a" stroke-width="10" fill="none" stroke-linecap="round"/>
+<ellipse cx="70" cy="118" rx="58" ry="74" fill="#e8650f"/><ellipse cx="170" cy="118" rx="58" ry="74" fill="#e8650f"/><ellipse cx="120" cy="118" rx="62" ry="80" fill="#ff7a1a"/>
+<path d="M120 40 Q100 118 120 196 M120 40 Q140 118 120 196" stroke="#c4520b" stroke-width="3" fill="none"/>
+<g class="glow" fill="#ffd34d"><path d="M70 92 L96 92 L83 66 Z"/><path d="M144 92 L170 92 L157 66 Z"/><path d="M112 112 L128 112 L120 98 Z"/>
+<path d="M58 132 Q120 186 182 132 L168 140 L160 128 L148 146 L136 132 L120 152 L104 132 L92 146 L80 128 L72 140 Z"/></g></svg><svg class="pk pm" viewBox="0 0 240 200"><path d="M118 40 Q116 18 132 8" stroke="#3f6b2a" stroke-width="10" fill="none" stroke-linecap="round"/>
+<ellipse cx="70" cy="118" rx="58" ry="74" fill="#e8650f"/><ellipse cx="170" cy="118" rx="58" ry="74" fill="#e8650f"/><ellipse cx="120" cy="118" rx="62" ry="80" fill="#ff7a1a"/>
+<path d="M120 40 Q100 118 120 196 M120 40 Q140 118 120 196" stroke="#c4520b" stroke-width="3" fill="none"/>
+<g class="glow" fill="#ffd34d"><path d="M70 92 L96 92 L83 66 Z"/><path d="M144 92 L170 92 L157 66 Z"/><path d="M112 112 L128 112 L120 98 Z"/>
+<path d="M58 132 Q120 186 182 132 L168 140 L160 128 L148 146 L136 132 L120 152 L104 132 L92 146 L80 128 L72 140 Z"/></g></svg>
+  </section>
+
+  <!-- 7 · No son aves -->
+  <section class="slide" data-n="7">
+    <div class="center">
+      <div class="tag">Objeción del público</div>
+      <h2>"Pero Elián, los murciélagos<br><span style="color:var(--muted)">no son aves</span>. Son mamíferos."</h2>
+      <h1 class="frag" style="margin-top:60px">Eso es exactamente<br>lo que <span class="y">quieren que creas</span>.</h1>
+    </div>
+  </section>
+
+  <!-- 8 · Evidencia (acá aparece el murciélago puteador) -->
+  <section class="slide" data-n="8" data-grumpy="1">
+    <div class="tag">La evidencia · date cuenta</div>
+    <h2>Cada dato solo es casualidad.<br><span class="y">Juntos, son un turno noche.</span></h2>
+    <div class="cards ev" style="display:flex;flex-wrap:wrap;justify-content:center">
+      <div class="card"><div class="e">🙃</div><h3>Duermen boca abajo</h3><p>Ningún animal duerme así. Un dispositivo en un <b>cargador inalámbrico</b>, sí.</p></div>
+      <div class="card"><div class="e">📡</div><h3>Ecolocalización</h3><p>Se orientan con un sonar. No "parecido" a un sonar: <b>es un sonar</b>.</p></div>
+      <div class="card"><div class="e">🕳️</div><h3>Viven en cuevas</h3><p>Oscuras, frías, llenas de unidades colgadas. Eso es un <b>data center</b>.</p></div>
+      <div class="card"><div class="e">🎃</div><h3>En Halloween los colgamos en la puerta</h3><p>"Decoración". Les estamos <b>instalando las antenas</b> nosotros mismos.</p></div>
+      <div class="card" style="border-color:var(--danger)"><div class="e">🍼</div><h3>0 murciélagos bebé</h3><p>Ver slide anterior. <b>No insistan.</b></p></div>
+    </div>
+  </section>
+
+  <!-- 9 · Testigo -->
+  <section class="slide" data-n="9">
+    <div class="tag" style="text-align:center">Testigo protegido · identidad reservada</div>
+    <div class="tw">
+      <div class="lab">● TESTIGO PROTEGIDO</div><div class="lab2">ARCHIVO 31-10</div>
+      <div id="ytBox" style="position:absolute;inset:0"></div>
+    </div>
+    <a id="ytBack" href="#" target="_blank" rel="noopener">link al video de respaldo ↗</a>
+  </section>
+
+
+  <!-- 11 · Solución -->
+  <section class="slide" data-n="11">
+    <div class="tag" style="margin-top:80px">La solución</div>
+    <h2>Si ellos usan sonar para encontrarnos...<br><span class="g">¿por qué nosotros no?</span></h2>
+    <div class="cards" style="grid-template-columns:repeat(3,1fr)">
+      <div class="card"><div class="e">🦇</div><h3>Sonar en vivo</h3><p>Cada unidad en 300 metros a la redonda: <b>distancia y rumbo</b>, en tiempo real.</p></div>
+      <div class="card"><div class="e">📡</div><h3>Pulso de 45 kHz</h3><p>Hablamos <b>su mismo idioma</b>. Ellos no saben que somos nosotros.</p></div>
+      <div class="card"><div class="e">⚠️</div><h3>Alerta de proximidad</h3><p>Si una unidad se acerca, <b>te enterás antes que ella</b>.</p></div>
+    </div>
+  </section>
+
+  <!-- 12 · Cierre -->
+  <section class="slide" data-n="12" data-final="1">
+    <img src="img/sidequest.png" alt="" style="height:90px;border-radius:6px">
+    <div class="qr"><img src="img/qr.png" alt="">Por si querés charlar y sumar un contacto ;)<br>(este no te rastrea)</div>
+    <h1 style="margin-top:80px">Nos escuchan.<br><span class="y">Despertate</span> y unite a la causa.</h1>
+    <div style="margin-top:50px;height:170px"><span id="gracias">¡Gracias!</span></div>
+  </section>
+
+  <div id="swarm"></div>
+  <div id="grumpy"></div>
+  <div id="bubble"></div>
+  <div class="vignette"></div>
+</div>
+<div id="hud"></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const rnd=(a,b)=>Math.random()*(b-a)+a,ri=(a,b)=>Math.floor(rnd(a,b+1)),pick=a=>a[ri(0,a.length-1)];
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const stage=$('#stage');
+function fit(){const s=Math.min(innerWidth/1600,innerHeight/900);stage.style.transform=`translate(-50%,-50%) scale(${s})`}
+addEventListener('resize',fit);fit();
+
+// ---------- audio ----------
+let AC=null;function ac(){if(!AC)try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}if(AC&&AC.state==='suspended')AC.resume();return AC}
+function tone(f,t,dur,type='sine',vol=.2,f2=null,dest=null){const a=ac();if(!a)return;const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+dur);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.01);g.gain.exponentialRampToValueAtTime(.0005,t+dur);o.connect(g).connect(dest||a.destination);o.start(t);o.stop(t+dur+.05)}
+function noise(t,dur,vol=.15,fType='highpass',fq=1000,dest=null){const a=ac();if(!a)return;const len=Math.max(1,a.sampleRate*dur|0),buf=a.createBuffer(1,len,a.sampleRate),d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*(1-i/len);const n=a.createBufferSource();n.buffer=buf;const f=a.createBiquadFilter();f.type=fType;f.frequency.value=fq;const g=a.createGain();g.gain.value=vol;n.connect(f).connect(g).connect(dest||a.destination);n.start(t)}
+const SFX={whoosh:new Audio('audio/whoosh.mp3'),squeak:new Audio('audio/squeak.mp3')};Object.values(SFX).forEach(a=>a.preload='auto');
+function sfx(n,v=1){try{const a=SFX[n].cloneNode();a.volume=v;a.play().catch(()=>{})}catch(e){}}
+function whoosh(){sfx('whoosh',.8)}
+function squeak(){sfx('squeak',.7)}
+
+// ---------- música ----------
+// Slide 5 (striptease): suena audio/acdc.mp3. Al pasar de slide, fade-out y arranca audio/suspenso.mp3 en loop hasta el final.
+const ACDC_VOL=1, SUSP_VOL=.3, ACDC_START=.4;
+const ACDC=new Audio('audio/acdc.mp3');ACDC.preload='auto';
+const SUSP=new Audio('audio/suspenso.mp3');SUSP.preload='auto';SUSP.loop=true;
+let suspOn=false,suspMuted=false,synth=null,drone=null;const fades=new Map();
+function fade(el,to,ms,then){clearInterval(fades.get(el));const from=el.volume,t0=performance.now();
+  fades.set(el,setInterval(()=>{const p=Math.min(1,(performance.now()-t0)/ms);el.volume=Math.max(0,Math.min(1,from+(to-from)*p));if(p>=1){clearInterval(fades.get(el));then&&then()}},40))}
+function startAcdc(){
+  if(suspOn)fade(SUSP,0,800,()=>SUSP.pause());
+  clearInterval(fades.get(ACDC));ACDC.volume=ACDC_VOL;try{ACDC.currentTime=ACDC_START}catch(e){}
+  ACDC.play().catch(()=>{});
+}
+function endAcdc(){stopSynth();if(!ACDC.paused)fade(ACDC,0,1800,()=>ACDC.pause());clearTimeout(window._suspT);window._suspT=setTimeout(()=>{if(slides[cur].dataset.n!=='6t'&&slides[cur].dataset.n!=='6')startSusp(true)},2200)}
+function startSusp(force){if(suspMuted)return;if(suspOn&&!force&&!SUSP.paused)return;suspOn=true;
+  SUSP.volume=0;SUSP.play().then(()=>fade(SUSP,SUSP_VOL,4000)).catch(()=>{})}
+function duck(on){if(!SUSP.paused)fade(SUSP,on?.05:SUSP_VOL,800)} // la música queda siempre al 30%
+function toggleMusic(){
+  if(!ACDC.paused||synth){fade(ACDC,0,600,()=>ACDC.pause());stopSynth();return}
+  suspMuted=!suspMuted;if(suspMuted){fade(SUSP,0,800,()=>SUSP.pause());stopDrone()}else startSusp(true)}
+// respaldo si falta suspenso.mp3: un zumbido grave
+function startDrone(){if(drone)return;const a=ac();if(!a)return;const g=a.createGain();g.gain.value=0;g.gain.setTargetAtTime(.05,a.currentTime,2);const f=a.createBiquadFilter();f.type='lowpass';f.frequency.value=220;f.connect(g).connect(a.destination);
+  const os=[55,55.4,82.4].map(fr=>{const o=a.createOscillator();o.type='sawtooth';o.frequency.value=fr;o.connect(f);o.start();return o});drone={g,os}}
+function stopDrone(){if(!drone)return;try{drone.g.gain.setTargetAtTime(0,ac().currentTime,.5);const d=drone;setTimeout(()=>d.os.forEach(o=>o.stop()),2000)}catch(e){}drone=null}
+// respaldo si falta acdc.mp3: música épica sintetizada
+function startSynth(){
+  if(synth)return;const a=ac();if(!a)return;const bus=a.createGain();bus.gain.value=.9;bus.connect(a.destination);
+  const bpm=132,beat=60/bpm;let next=a.currentTime+.05,i=0;
+  const chords=[[146.8,174.6,220],[116.5,146.8,174.6],[130.8,164.8,196],[110,138.6,164.8]];
+  const tick=setInterval(()=>{while(next<a.currentTime+.3){const bar=Math.floor(i/8),k=i%8,ch=chords[bar%4];
+      if(k===0||k===3||k===4||k===6)tone(70,next,.35,'sine',.7,40,bus);
+      if(k===2||k===6)noise(next,.18,.35,'highpass',1500,bus);
+      noise(next+beat/4,.06,.12,'highpass',2500,bus);
+      if(k===0){ch.forEach(f=>{tone(f,next,beat*3.6,'sawtooth',.07,null,bus);tone(f*2,next,beat*3.6,'sawtooth',.035,null,bus)})}
+      if(k===4)ch.forEach(f=>tone(f*2,next,beat*.4,'square',.04,null,bus));
+      if(k===0&&bar%2===0)tone(ch[0]/2,next,beat*7,'triangle',.25,null,bus);
+      next+=beat/2;i++}},60);
+  synth={tick,bus};
+}
+function stopSynth(){if(!synth)return;clearInterval(synth.tick);try{synth.bus.gain.setTargetAtTime(0,ac().currentTime,.6)}catch(e){}synth=null}
+
+// ---------- bat svg ----------
+const BATPATH='M30 80 C110 105 170 108 205 102 Q240 180 318 222 L340 150 Q370 185 400 150 L422 222 Q500 180 535 102 C570 108 630 105 710 80 Q660 170 672 265 Q610 250 568 322 Q520 300 492 360 Q420 335 370 410 Q320 335 248 360 Q220 300 172 322 Q130 250 68 265 Q80 170 30 80 Z';
+function batSVG(col='#0b0b0b',eyes=true){return `<svg viewBox="0 0 740 440"><g class="wing"><path d="${BATPATH}" fill="${col}" stroke="#ff8a1a" stroke-width="14" stroke-linejoin="round"/></g>${eyes?'<circle cx="356" cy="208" r="11" fill="#ff3b3b"/><circle cx="384" cy="208" r="11" fill="#ff3b3b"/>':''}</svg>`}
+function grumpySVG(){return `<svg viewBox="0 0 740 440"><g class="body"><path d="${BATPATH}" fill="#151515" stroke="#ffb020" stroke-width="8"/>
+  <circle cx="347" cy="225" r="24" fill="#fff"/><circle cx="393" cy="225" r="24" fill="#fff"/><circle cx="350" cy="229" r="11" fill="#111"/><circle cx="390" cy="229" r="11" fill="#111"/>
+  <path d="M318 192 L362 210 M422 192 L378 210" stroke="#ff4d4d" stroke-width="9" stroke-linecap="round"/>
+  <path d="M348 290 Q370 272 392 290" stroke="#fff" stroke-width="7" fill="none"/><path d="M355 284 L359 302 L364 281 M376 281 L381 302 L385 284" fill="#fff"/></g></svg>`}
+
+// ---------- swarm transition ----------
+const swarm=$('#swarm');let swarmBusy=false;
+function runSwarm(onMid,dur=1300,count=40){
+  swarmBusy=true;const bats=[];
+  for(let i=0;i<count;i++){const el=document.createElement('div');el.className='sb';const w=rnd(110,260);el.style.width=w+'px';el.innerHTML=batSVG();
+    const y0=rnd(-60,860),y1=y0+rnd(-160,160),delay=rnd(0,.35)*dur,d=dur*rnd(.65,1);
+    el.animate([{transform:`translate(1700px,${y0}px) rotate(${rnd(-10,10)}deg)`},{transform:`translate(-260px,${y1}px) rotate(${rnd(-20,20)}deg)`}],{duration:d,delay,easing:'cubic-bezier(.3,.1,.6,1)',fill:'both'});
+    el.querySelector('.wing').style.animationDuration=rnd(.1,.2)+'s';swarm.appendChild(el);bats.push(el)}
+  setTimeout(onMid,dur*.48);
+  setTimeout(()=>{bats.forEach(b=>b.remove());swarmBusy=false},dur*1.4);
+}
+
+// ---------- slides + fragments ----------
+let slides=$$('.slide');let cur=0,frag=0;
+function frags(i){return [...slides[i].querySelectorAll('.frag')]}
+function show(i){slides.forEach((s,k)=>s.classList.toggle('on',k===i));cur=i;frag=0;frags(i).forEach(f=>f.classList.remove('vis'));onEnter(slides[i]);$('#hud').textContent=`${i+1}/${slides.length}`}
+function go(i,anim=true){if(i<0||i>=slides.length)return;onLeave(slides[cur]);if(anim)runSwarm(()=>show(i));else show(i)}
+function next(){
+  const s=slides[cur];
+  if(s.dataset.n==='3'&&babyStage<1){babyAdvance();return}
+  if(s.dataset.final&&!stolen){stealGracias();return}
+  const f=frags(cur);if(frag<f.length){f[frag].classList.add('vis');frag++;return}
+  go(cur+1)}
+function prev(){const f=frags(cur);if(frag>0){frag--;f[frag].classList.remove('vis');return}go(cur-1,false)}
+
+function onEnter(s){
+  const n=s.dataset.n;
+  if(n==='3'){resetBabies();clearTimeout(window._babyAuto);window._babyAuto=setTimeout(()=>{if(slides[cur]===s&&babyStage===0)babyAdvance()},6000)}
+  clearTimeout(window._autoT1);clearTimeout(window._autoT2);clearTimeout(window._autoT3);
+  s.querySelectorAll('.auto').forEach((el,i)=>{el.classList.remove('vis');window['_autoT'+(i+1)]=setTimeout(()=>{if(slides[cur]===s){el.classList.add('vis')}},(+el.dataset.at||0)+300)});
+  if(+n<5&&!ACDC.paused)fade(ACDC,0,800,()=>ACDC.pause());
+  if(n==='6'){if(!ACDC.paused)fade(ACDC,.25,1200);clearTimeout(window._armT);window._armT=setTimeout(()=>{if(slides[cur]===s)go(cur+1)},13000)}
+  if(n==='6t'&&!ACDC.paused)fade(ACDC,1,1500);
+  if(n==='5'){s.classList.remove('s5on');void s.offsetWidth;s.classList.add('s5on');startAcdc()}
+  if(n==='9'){setupTestigo();duck(true)}
+  if(s.dataset.grumpy)setTimeout(()=>{if(slides[cur]===s)grumpyIn()},150);
+  if(s.dataset.final){stolen=false;const g=$('#gracias');g.style.transform='';g.style.opacity=1}
+}
+function onLeave(s){
+  const n=s.dataset.n;
+  if(n==='6')clearTimeout(window._armT);
+  if(n==='6t')endAcdc();
+  if(n==='3'){clearTimeout(babyTimer);clearTimeout(window._babyAuto)}
+  if(n==='9'){$('#ytBox').innerHTML='';duck(false)}
+  if(grumpyOn)grumpyOut(true);
+}
+
+// ---------- baby bats ----------
+let babyStage=0,babyTimer=null,babyCount=0;const babyImgs=[];
+for(let k=1;k<=12;k++){const im=new Image();im.onload=()=>babyImgs.push(im.src);im.src=`img/bebe${k}.jpg`}
+const CAPS=['¿Y esto qué es? ¿IA? Pelotudo.','No es CGI, boludo.','¿Photoshop? Andá a cagar.','Es real, gil.','¿Muñeco? Tu vieja.','Mirá bien, salame.','Abrí los ojos, nabo.','¿Render? Las pelotas.','100% real, bobo.','¿Nadie? Mirá atrás, gil.','¿Y este qué es? ¿Un pancho?'];
+function babySVG(){const c=pick(['#d9b38c','#c9a27e','#e6c9a8','#bfa48a']);return `<svg viewBox="0 0 200 170"><rect width="200" height="170" fill="${pick(['#f6efe6','#eef3f6','#f3eadf'])}"/>
+ <path d="M40 120 Q100 40 160 120 Q160 165 100 165 Q40 165 40 120Z" fill="${c}"/>
+ <path d="M60 64 L52 18 L84 52 Z M140 64 L148 18 L116 52 Z" fill="#6b5446"/><ellipse cx="100" cy="80" rx="48" ry="40" fill="#6b5446"/>
+ <circle cx="82" cy="78" r="13" fill="#111"/><circle cx="118" cy="78" r="13" fill="#111"/><circle cx="86" cy="73" r="4.5" fill="#fff"/><circle cx="122" cy="73" r="4.5" fill="#fff"/>
+ <ellipse cx="100" cy="98" rx="6" ry="4" fill="#3a2a22"/><path d="M92 106 Q100 112 108 106" stroke="#3a2a22" stroke-width="3" fill="none"/>
+ <path d="M40 120 Q100 100 160 120" stroke="rgba(0,0,0,.15)" stroke-width="3" fill="none"/></svg>`}
+function resetBabies(){clearTimeout(babyTimer);$('#babies').innerHTML='';const ct=document.querySelector('[data-n="3"] .center');if(ct)ct.style.opacity=1;babyStage=0;babyCount=0}
+function addBaby(){const d=document.createElement('div');d.className='baby';
+  const src=babyImgs.length?babyImgs[babyCount%babyImgs.length]:null;
+  d.innerHTML=(src?`<img src="${src}">`:babySVG())+`<span>${CAPS[babyCount%CAPS.length]}</span>`;
+  d.style.left=rnd(0,1290)+'px';d.style.top=rnd(0,560)+'px';d.style.transform=`rotate(${rnd(-14,14)}deg)`;
+  $('#babies').appendChild(d);babyCount++;squeak()}
+function babyAdvance(){
+  if(babyStage!==0)return;babyStage=1;
+  const c=document.createElement('div');c.id='carrier';
+  const src='img/bebe6.jpg';
+  c.innerHTML=`<div class="cbat">${grumpySVG()}</div><div class="strings"><i></i><i></i></div>
+    <div class="cphoto">${src?`<img src="${src}">`:babySVG()}<span>¿IA? Pelotudo.</span></div>`;
+  const content=slides[cur].querySelector('.center');content.style.transition='opacity .5s';content.style.opacity=0;
+  $('#babies').appendChild(c);squeak();
+  c.animate([{transform:'translate(1750px,-80px)'},{transform:'translate(560px,30px)'}],{duration:1100,easing:'cubic-bezier(.2,.8,.3,1)',fill:'forwards'});
+  babyTimer=setTimeout(()=>{if(slides[cur].dataset.n!=='3')return;squeak();
+    c.animate([{transform:'translate(560px,30px)'},{transform:'translate(-700px,-180px) rotate(-12deg)'}],{duration:1100,easing:'cubic-bezier(.6,0,.9,.4)',fill:'forwards'});
+    babyTimer=setTimeout(()=>{if(slides[cur].dataset.n==='3')go(cur+1)},1200)},1100+5000);
+}
+
+// ---------- testigo ----------
+let YT_ID=null,YT_URL='';
+function ytId(u){u=(u||'').trim();if(!u)return null;let m=u.match(/(?:youtu\.be\/|v=|shorts\/|embed\/|live\/)([A-Za-z0-9_-]{11})/);if(m)return m[1];if(/^[A-Za-z0-9_-]{11}$/.test(u))return u;return null}
+function setupTestigo(){if(!YT_ID)return;$('#ytBox').innerHTML=`<iframe src="https://www.youtube.com/embed/${YT_ID}?autoplay=1&rel=0&modestbranding=1&playsinline=1" style="width:100%;height:100%;border:0" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`}
+
+// ---------- murciélago puteador ----------
+const INSULTS=[
+ 'Che, ¿y este speaker quién carajo es?',
+ 'Flaco, dejá de decir pavadas.',
+ 'Me estoy durmiendo y soy <u>NOCTURNO</u>. Me voy.',
+];
+let grumpyOn=false,insultIdx=0,insultTimer=null;const G=$('#grumpy'),B=$('#bubble');
+function grumpyIn(){
+  grumpyOn=true;G.innerHTML=grumpySVG();G.className='';G.style.display='block';G.style.transition='none';
+  G.style.transform='translate(1700px,120px) rotate(0deg)';void G.offsetWidth;G.style.transition='';
+  // se mete con la bandada y frena arriba a la derecha, boca abajo
+  requestAnimationFrame(()=>{G.style.transform='translate(1310px,18px) rotate(180deg)'});
+  squeak();insultIdx=0;
+  insultTimer=setTimeout(function loop(){if(!grumpyOn)return;if(insultIdx>=INSULTS.length){grumpyOut(false,true);return}sayInsult(INSULTS[insultIdx]);insultIdx++;insultTimer=setTimeout(loop,3600)},1700);
+}
+function sayInsult(t){B.innerHTML=t;B.style.display='block';B.classList.remove('pop');void B.offsetWidth;B.classList.add('pop');
+  B.style.left='';B.style.right='90px';B.style.top='190px';squeak()}
+function grumpyOut(fast,auto){
+  if(!grumpyOn)return;grumpyOn=false;clearTimeout(insultTimer);
+  if(!auto)B.innerHTML='¡Me voy, me voy!';B.classList.remove('pop');void B.offsetWidth;B.classList.add('pop');
+  setTimeout(()=>{B.style.display='none'},fast?50:550);
+  G.classList.add('flee');setTimeout(()=>{G.style.transform='translate(-400px,-300px) rotate(-30deg)';whoosh()},fast?0:400);
+  setTimeout(()=>{G.style.display='none';G.classList.remove('flee')},fast?800:1300);
+}
+
+// ---------- final: se roba el "Gracias" ----------
+let stolen=false;
+async function stealGracias(){
+  stolen=true;const g=$('#gracias');const gr=g.getBoundingClientRect(),sr=stage.getBoundingClientRect(),sc=sr.width/1600;
+  const gx=(gr.left-sr.left)/sc+gr.width/sc/2-85,gy=(gr.top-sr.top)/sc-70;
+  G.innerHTML=grumpySVG();G.className='';G.style.display='block';G.style.transition='none';G.style.transform='translate(1700px,-200px)';void G.offsetWidth;
+  G.style.transition='transform .9s cubic-bezier(.2,.8,.3,1)';squeak();G.style.transform=`translate(${gx}px,${gy}px)`;
+  await sleep(1000);B.innerHTML='Esto me lo llevo.';B.style.display='block';B.style.right='auto';B.style.left=(gx-60)+'px';B.style.top=(gy-120)+'px';B.classList.remove('pop');void B.offsetWidth;B.classList.add('pop');
+  await sleep(1600);B.style.display='none';whoosh();
+  G.style.transition='transform 1.2s cubic-bezier(.6,0,.9,.4)';G.style.transform=`translate(-500px,${gy-250}px) rotate(-20deg)`;
+  g.style.transition='transform 1.2s cubic-bezier(.6,0,.9,.4)';g.style.transform=`translate(${-500-gx-200}px,-250px) rotate(-20deg)`;
+  await sleep(1300);G.style.display='none';
+}
+
+// ---------- input ----------
+let started=false;
+const TEST=new Audio('audio/prueba.mp3');TEST.preload='auto';
+$('#bTest').onclick=()=>{try{TEST.currentTime=0;TEST.play().catch(()=>{})}catch(e){}};
+try{$('#ytIn').value=localStorage.getItem('yt_testigo')||''}catch(e){}
+function ytCheck(){const id=ytId($('#ytIn').value);$('#ytInfo').textContent=$('#ytIn').value.trim()?(id?'✓ Link válido: la slide del testimonio va a aparecer.':'✗ No reconozco ese link de YouTube.'):'Sin link → la slide del testimonio no aparece.';$('#ytInfo').style.color=id?'#3ddc84':$('#ytIn').value.trim()?'#ff4d4d':''}
+$('#ytIn').addEventListener('input',ytCheck);ytCheck();
+$('#bGo').onclick=async()=>{const raw=$('#ytIn').value.trim();YT_ID=ytId(raw);try{localStorage.setItem('yt_testigo',raw)}catch(e){}
+  const ts=document.querySelector('.slide[data-n="9"]');
+  if(YT_ID){YT_URL='https://www.youtube.com/watch?v='+YT_ID;$('#ytBack').href=YT_URL;ts.classList.remove('skip')}else ts.classList.add('skip');
+  slides=$$('.slide').filter(x=>!x.classList.contains('skip'));
+  ac();try{await document.documentElement.requestFullscreen()}catch(e){}$('#start').style.display='none';started=true;show(0)};
+addEventListener('keydown',e=>{
+  if(!started)return;const k=e.key;
+  if(['ArrowRight','PageDown',' ','ArrowDown'].includes(k)){e.preventDefault();next()}
+  else if(['ArrowLeft','PageUp','ArrowUp'].includes(k)){e.preventDefault();prev()}
+  else if(k==='b'||k==='B'||k==='.'){e.preventDefault();if(grumpyOn)grumpyOut(false);else if(slides[cur].dataset.grumpy)grumpyIn()}
+  else if(k==='f'||k==='F'||k==='F5'){e.preventDefault();document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
+  else if(k==='m'||k==='M'){toggleMusic()}
+  else if(k==='Home'){go(0,false)}
+  else if(/^[1-9]$/.test(k)&&e.altKey){go(+k-1,false)}
+});
+
+</script>
+</body>
+</html>

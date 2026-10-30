@@ -1,0 +1,2 @@
+acdc.mp3 = Back In Black (striptease).
+suspenso.mp3 = música de suspenso de fondo (la bajás vos). Si no está, suena un zumbido grave.
