@@ -330,7 +330,7 @@ function startAcdc(){
 function endAcdc(){stopSynth();if(!ACDC.paused)fade(ACDC,0,1800,()=>ACDC.pause());clearTimeout(window._suspT);window._suspT=setTimeout(()=>{if(slides[cur].dataset.n!=='6t'&&slides[cur].dataset.n!=='6')startSusp(true)},2200)}
 function startSusp(force){if(suspMuted)return;if(suspOn&&!force&&!SUSP.paused)return;suspOn=true;
   SUSP.volume=0;SUSP.play().then(()=>fade(SUSP,SUSP_VOL,4000)).catch(()=>{})}
-function duck(on){if(!SUSP.paused)fade(SUSP,on?.05:SUSP_VOL,800)} // la música queda siempre al 30%
+function duck(on){} // la caja musical queda siempre al 30%, también durante el video // la música queda siempre al 30%
 function toggleMusic(){
   if(!ACDC.paused||synth){fade(ACDC,0,600,()=>ACDC.pause());stopSynth();return}
   suspMuted=!suspMuted;if(suspMuted){fade(SUSP,0,800,()=>SUSP.pause());stopDrone()}else startSusp(true)}
